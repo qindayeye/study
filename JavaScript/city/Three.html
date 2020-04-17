@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 20px auteo;
+            padding: 0;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+
+        <h3>{{title}}</h3>
+        <p>请选择收货地址</p>
+        <select name="province" v-model='selected1'>
+            <option v-for="(item,index) in ct" :key="item.region_id" :value="index">{{item.region_name}}
+            </option>
+        </select>--
+        <select name="city" v-model='selected2'>
+            <option v-for="(item,index) in ct[selected1].city" :key="item.region_id" :value="index">{{item.region_name}}
+            </option>
+        </select>--
+        <select name="qu" v-model='selected3'>
+            <option v-for="(item,index) in ct[selected1].city[selected2].district" :key="item.region_id" :value="index">{{item.region_name}}
+            </option>
+        </select>
+        <p>
+            {{selected1}}  ||
+            {{selected2}}  ||
+            {{selected3}}
+        </p>
+        <p>
+            {{ct[selected1].region_name}}--{{ct[selected1].city[selected2].region_name}}--{{ct[selected1].city[selected2].district[selected3].region_name}}
+        </p>
+        <div>
+        <h2 style="color: red;">《飞》</h2>
+        <p style="color: royalblue;">风浪未平息  我宣告奔跑的意义</p>
+        <p style="color: royalblue;">这不是叛逆  我只是淋了一场雨</p>
+        <p style="color: royalblue;">没怀疑  燃烧的梦都飞哪去</p>
+        <p style="color: royalblue;">问自己  这次我不会放弃</p>
+        </div>
+    </div>
+
+</body>
+<!-- 开发环境版本，包含了有帮助的命令行警告 -->
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="./city.js"></script>
+<script>
+    var app = new Vue({
+        el: "#app",
+        data: {
+            title: "Good!",
+            ct: data,
+            selected1: 0,
+            selected2: 0,
+            selected3: 0
+        },
+        created() {
+            console.log(this.ct)
+            console.log(this.ct[this.selected1-2])
+            // this.ct = data
+        },
+        computed: {
+
+        },
+        watch:{
+            selected1(){ // 监听省的变化
+                console.log('...')
+                this.selected2 = 0
+                this.selected3 = 0
+            }
+        }
+        
+    })
+
+</script>
+
+</html>

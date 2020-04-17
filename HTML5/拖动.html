@@ -1,0 +1,67 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <link rel="stylesheet" href="./font_1739320_zq4ggorr06/iconfont.css">
+    <style type="text/css">
+        #div1,
+        #div2 {
+            width: 398px;
+            height: 66px;
+            padding: 10px;
+            border: 1px solid #aaaaaa;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .ivon {
+            color: #f74d0a;
+            font-size: 55px;
+        }
+    </style>
+    <script type="text/javascript">
+        function allowDrop(ev) {
+            console.log(ev, 'allowDrop')
+            ev.preventDefault();
+        }
+
+        function drag(ev) {
+            console.log(ev, 'drag')
+            ev.dataTransfer.setData("Text", ev.target.id);
+        }
+
+        function drop(ev) {
+            console.log(ev, 'drop')
+            ev.preventDefault();
+            var data = ev.dataTransfer.getData("Text");
+            console.log(data, 'drop22') // 被拖动的元素必须有id
+            ev.target.appendChild(document.getElementById(data));
+        }
+    </script>
+</head>
+
+<body>
+    <div>
+        <span id="ddd1" draggable="true" ondragstart="drag(event)" class="iconfont icon-tang_SVG ivon"></span>
+        <span id="ddd2" draggable="true" ondragstart="drag(event)" class="iconfont icon-mianbao_SVG ivon"></span>
+        <span id="ddd3" draggable="true" ondragstart="drag(event)" class="iconfont icon-biaoqing ivon"></span>
+        <span id="ddd4" draggable="true" ondragstart="drag(event)" class="iconfont icon-tiantianquan_SVG ivon"></span>
+
+        <span id="ddd6" draggable="true" ondragstart="drag(event)"
+            class="iconfont icon-zhibeixiaodangao_SVG ivon"></span>
+    </div>
+
+    <p>请把 W3School 的图片拖放到矩形中：</p>
+
+    <div id="div1" ondrop="drop(event)" ondragover="allowDrop(event)">
+        <span id="ddd5" draggable="true" ondragstart="drag(event)" class="iconfont icon-tang_SVG ivon"></span>
+    </div>
+    <div id="div2" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+    <br />
+    <img id="drag1" src="https://www.w3school.com.cn/i/eg_dragdrop_w3school.gif" draggable="true"
+        ondragstart="drag(event)" />
+
+</body>
+
+</html>

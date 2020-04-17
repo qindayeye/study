@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>WebApp启动页</title>
+    <script type="text/javascript" src="http://ajax.microsoft.com/ajax/jquery/jquery-1.4.min.js"></script>
+    <style type="text/css">
+        body{
+            width: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        input{
+            padding: .2rem;
+            margin: .5rem auto 0 auto;
+            font-size: .5rem;
+            border-radius: .5rem;
+            display: block;
+            width: 5rem;
+            color: red;
+            background: white;
+        }
+        #text{
+            line-height: .6rem;
+            font-size: .35rem;
+            color: red;
+            padding: .3rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <input type="button" value="拨打电话" id="Dial" />
+    <input type="button" value="手机响起" id="Beep" />
+    <input type="button" value="手机震动" id="Vibrate" />
+    <input type="button" value="常亮设置" id="SetWakelock" />
+    <input type="button" value="是否常亮" id="IsWakelock" />
+    <input type="button" value="设置音量" id="SetVolume" />
+    <input type="button" value="获取音量" id="GetVolume" />
+    <input type="button" value="亮度设置" id="SetBrightness" />
+    <input type="button" value="亮度获取" id="GetBrightness" />
+    <input type="button" value="横屏竖屏" id="LockOrientation" />
+    <input type="button" value="解除锁屏" id="UnlockOrientation" />
+    <input type="button" value="返回主页" id="ReturnIndex" />
+    <div id="text"></div>
+</body>
+<script type="text/javascript">
+    /**
+     * 页面布局rem重置语句
+     */
+    $('html').css("font-size", $(window).width()/10);
+    
+    /**
+     * 手机端页面初始化事件, 所有操作均要写在在该事件内
+     * 否则可能会出现错误: plus is not defind
+     */
+    document.addEventListener('plusready', function(){
+        /**
+         * 返回首页的事件
+         */
+        $('#ReturnIndex').on('touchstart', function(){
+            location.href = 'Index.html';
+        });
+        
+        /**
+         * 获取手机设备信息 plus.device
+         */
+        var device = plus.device;
+        $('#text').append('国际移动设备身份码: ' + device.imei + '<br>');
+        for(var i = 0; i < device.imsi.length; i++){            
+            $('#text').append('国际移动用户识别码: ' + device.imsi[i] + '<br>');
+        }
+        $('#text').append('设备的型号信息: ' + device.model + '<br>');
+        $('#text').append('设备的生产厂商信息: ' + device.vendor + '<br>');
+        $('#text').append('设备的唯一标识号: ' + device.uuid + '<br>');
+        
+        /**
+         * 拨打电话的  device.dial( 号码, 是否需要用户确认 )
+         * 发出蜂鸣声  device.beep( 次数 )
+         * 手机震动  device.vibrate( 时间毫秒 )
+         * 设置设备屏幕是否常亮  device.setWakelock( 是否 )
+         * 获取设备屏幕是否常亮   Bool isWakelock = device.isWakelock()
+         * 设置系统音量  device.setVolume( 0-1之间的值)
+         * 获取系统音量  Number volume = device.getVolume() 
+         */
+        $('#Dial').on('touchstart', function(){
+            device.dial('18353355962', true);
+        });
+        $('#Beep').on('touchstart', function(){
+            device.beep(3);
+        });
+        $('#Vibrate').on('touchstart', function(){
+            device.vibrate(1000);
+        });
+        $('#SetWakelock').on('touchstart', function(){
+            device.setWakelock(true);
+        });
+        $('#IsWakelock').on('touchstart', function(){
+            $('#text').append('是否常亮: ' + device.isWakelock() + '<br>');
+        });
+        $('#SetVolume').on('touchstart', function(){
+            device.setVolume(0.6); //某些情况下可能不准确
+        });
+        $('#GetVolume').on('touchstart', function(){
+            $('#text').append('音量值为: ' + device.getVolume() + '<br>');
+        });
+        
+        /**
+         * 获取手机屏幕信息  var screen = plus.screen
+         */
+        screen = plus.screen;
+        $('#text').append('设备屏幕高度分辨率: ' + screen.resolutionHeight + '<br>');
+        $('#text').append('设备屏幕宽度分辨率: ' + screen.resolutionWidth + '<br>');
+        $('#text').append('逻辑分辨率与实际分辨率的比例: ' + screen.scale + '<br>');
+        $('#text').append('设备屏幕水平方向的密度: ' + screen.dpiX + '<br>');
+        $('#text').append('设备屏幕垂直方向的密度: ' + screen.dpiY + '<br>');
+        
+        /**
+         * 设置屏幕亮度  screen.setBrightness( 0-1之间的数 );
+         * 获取品目亮度  Number brightness = screen.getBrightness()
+         * 锁定屏幕方向  screen.lockOrientation( orientation )
+         * 1: "portrait-primary": 竖屏正方向
+         * 2: "portrait-secondary": 竖屏反方向
+         * 3: "landscape-primary": 横屏正方向
+         * 4: "landscape-secondary": 横屏反方向
+         * 5: "portrait": 竖屏正方向或反方向
+         * 6: "landscape": 横屏正方向或反方向
+         * 解除锁定屏幕方向: screen.unlockOrientation
+         */
+        $('#SetBrightness').on('touchstart', function(){
+            screen.setBrightness(0.6);
+        });
+        $('#GetBrightness').on('touchstart', function(){
+            $('#text').append('屏幕亮度为: ' + screen.getBrightness() + '<br>');
+        });
+        $('#LockOrientation').on('touchstart', function(){
+            screen.lockOrientation("landscape-primary");
+        });
+        $('#UnlockOrientation').on('touchstart', function(){
+            screen.unlockOrientation();
+        });
+        
+        /**
+         * 获取屏幕显示区域信息 var display = plus.display
+         */
+        var display = plus.display;
+        $('#text').append('应用可使用的屏幕高度逻辑分辨率: ' + display.resolutionHeight + '<br>');
+        $('#text').append('应用可使用的屏幕宽度逻辑分辨率: ' + display.resolutionWidth + '<br>');
+        
+        /**
+         * 获取系统信息  var os = plus.os;
+         */
+        var os = plus.os;
+        $('#text').append('系统语言信息: ' + os.language + '<br>');
+        $('#text').append('系统版本信息: ' + os.version + '<br>');
+        $('#text').append('系统的名称: ' + os.name + '<br>');
+        $('#text').append('系统的供应商信息: ' + os.vendor + '<br>');
+    });
+</script>
+</html>

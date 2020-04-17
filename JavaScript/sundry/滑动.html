@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Web App">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1, user-scalable=yes, minimum-scale=1, maximum-scale=1">
+    <title>Document</title>
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .videoContainer {
+            width: 100%;
+            height: 200px;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div style="width:100%;height:200px">
+            <div class="videoContainer" id="videoContainer">
+                <div>
+                    <video src="https://ktoss.oss-cn-beijing.aliyuncs.com/sound/73.mp4" controls
+                        width='100%' height='100%' autoplay id="video" x5-playsinline="" playsinline=""
+                        webkit-playsinline=""></video>
+                </div>
+                <span id="close"
+                    style="display:none;position:absolute;right:0;top:0;font-size:30px;color:black;z-index:9999999999;width:100%;height:100%"></span>
+            </div>
+        </div>
+
+        <button id="clickButton" style="position:absolute;top:50px;left:50%;z-index:99999">点击按钮</button>
+    </div>
+    <iframe id="productUrl" src="https://wwww.baidu.com" frameborder="0" width="100%" height="100%"
+        style="position:absolute;left:0;top:0;display:none"></iframe>
+</body>
+<script>
+
+    window.οnlοad = function () {
+        document.body.ontouchmove = function (e) {
+            e.preventDefault();
+        };
+        document.getElementById('clickButton').οnclick = function (e) {
+            e.preventDefault();
+            document.getElementById('clickButton').style.display = "none";
+            document.getElementById('close').style.display = 'block';
+            var isShow = document.getElementById('productUrl').style.display;
+            console.log(isShow);
+            if (isShow == 'none') {
+                document.getElementById('productUrl').style.display = 'block';
+            } else {
+                document.getElementById('productUrl').style.display = 'none';
+            }
+            document.getElementById('videoContainer').style.width = "30%";
+            document.getElementById('videoContainer').style.height = "70px";
+            document.getElementById('videoContainer').style.position = "absolute";
+            document.getElementById('videoContainer').style.left = "200px";
+            document.getElementById('videoContainer').style.top = "50px";
+            document.getElementById('videoContainer').style.zIndex = "999";
+            document.getElementById('video').removeAttribute('controls');
+            document.getElementById('close').οnclick = function (e) {
+                document.getElementById('videoContainer').ontouchstart = null;
+                e.preventDefault();
+                document.getElementById('productUrl').style.display = 'none';
+                document.getElementById('videoContainer').style.width = "100%";
+                document.getElementById('videoContainer').style.height = "200px";
+                document.getElementById('videoContainer').style.position = "absolute";
+                document.getElementById('videoContainer').style.left = "0";
+                document.getElementById('videoContainer').style.top = "0";
+                document.getElementById('videoContainer').style.zIndex = "999";
+                document.getElementById('clickButton').style.display = 'block';
+                document.getElementById('video').setAttribute('controls', '');
+                document.getElementById('close').style.display = 'none';
+
+            }
+            document.getElementById('videoContainer').ontouchstart = function (e) {
+                var vc = document.getElementById('videoContainer');
+                var e = e || window.event;
+                console.log(e);
+                var vdX = e.touches[0].clientX - vc.offsetLeft;
+                var vdY = e.touches[0].clientY - vc.offsetTop;
+                console.log(vdX);
+                console.log(vdY);
+                document.ontouchmove = function (e) {
+
+                    console.log(e);
+                    var e = e || window.event;
+                    var left = e.touches[0].clientX - vdX;
+                    var top = e.touches[0].clientY - vdY;
+                    vc.style.left = left + 'px';
+                    vc.style.top = top + 'px';
+
+                }
+                document.ontouchend = function () {
+                    document.ontouchmove = null;
+                }
+
+            }
+
+
+        }
+    }
+</script>
+
+</html>

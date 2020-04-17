@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .logo {
+            width: 100vw;
+        }
+
+        /* .btn {
+            z-index: 9;
+            position: fixed;
+            left: 15%;
+            bottom: 20%;
+            width: 70%;
+            background: linear-gradient(180deg, rgba(250, 255, 102, 1) 0%, rgba(255, 165, 23, 1) 71%, rgba(255, 184, 61, 1) 100%);
+            box-shadow: 0px 2px 16px 0px rgba(151, 17, 0, 0.5);
+            border-radius: 10px;
+            font-size: 15px;
+            font-family: PingFangSC-Semibold, PingFang SC;
+            font-weight: 600;
+            color: rgba(193, 21, 12, 1);
+            line-height: 30px;
+            text-align: center;
+
+        } */
+        .btn {
+            z-index: 9;
+            position: fixed;
+            left: 15%;
+            bottom: 100px;
+            width: 70%;
+
+        }
+    </style>
+    <script type="text/javascript" src="http://ajax.microsoft.com/ajax/jquery/jquery-1.4.min.js"></script>
+</head>
+
+<body>
+    <div class="content">
+        <image class="logo" src="/static/vip.png" mode="widthFix"></image>
+        <image class="btn" src="/static/uu.png" mode="widthFix"></image>
+        <!-- <div class="btn" @click="lingqu()">
+            立即领取
+        </div> -->
+    </div>
+</body>
+<script>
+    $(document).ready(function () {
+        $(".btn").click(function () {
+            $.ajax({ url: "/jquery/test1.txt", async: false })
+        });
+    });
+</script>
+
+</html>
