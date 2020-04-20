@@ -22,20 +22,20 @@
     </style>
     <script type="text/javascript">
         function allowDrop(ev) {
-            console.log(ev, 'allowDrop')
+            console.log(ev, "allowDrop")
             ev.preventDefault();
         }
 
         function drag(ev) {
-            console.log(ev, 'drag')
+            console.log(ev, "drag")
             ev.dataTransfer.setData("Text", ev.target.id);
         }
 
         function drop(ev) {
-            console.log(ev, 'drop')
+            console.log(ev, "drop")
             ev.preventDefault();
             var data = ev.dataTransfer.getData("Text");
-            console.log(data, 'drop22') // 被拖动的元素必须有id
+            console.log(data, "drop22") // 被拖动的元素必须有id
             ev.target.appendChild(document.getElementById(data));
         }
     </script>
