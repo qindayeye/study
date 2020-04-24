@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>test</title>
+        <link rel="stylesheet" href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+        <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    </head>
+    <body>
+        <div class="col-md-12 col-sm-12  col-xs-12">
+            <div class="form-group">
+                <label class="col-md-3 col-sm-3  col-xs-3 control-label">车牌号
+                </label>
+                <div class="col-md-5 col-sm-5  col-xs-5">
+                    <input type="text" class="form-control " placeholder="请输入车牌号" id="carNumb" name="carNumb">
+                </div>
+            </div>
+        </div>
+        
+        <button type="button" class="btn btn-primary" style="margin-left:28px;" onclick="submit()">submit</button>
+        
+        <script type="text/javascript">
+            function submit() {
+                /* 车牌号码验证 */
+                var $car_num = $("#carNumb").val();
+                var reg01 =
+                    /^(([京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领][A-Z](([0-9]{5}[DF])|([DF]([A-HJ-NP-Z0-9])[0-9]{4})))|([京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领][A-Z][A-HJ-NP-Z0-9]{4}[A-HJ-NP-Z0-9挂学警港澳使领]))$/;
+                if (reg01.test($car_num)) {
+                    alert("车牌号正确");
+                } else {
+                    alert("请填写正确的车牌号")
+                    return;
+                }
+            }
+        </script>
+    </body>
+</html>
