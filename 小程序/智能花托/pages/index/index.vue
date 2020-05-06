@@ -21,7 +21,7 @@
 						border-radius="8"
 						backgroundColor="#DCDCDC"
 						:percent="[(item.newvalue - item.init) / item.water] * 100"
-						activeColor="#00FF00"
+						activeColor="#32CD32"
 						stroke-width="16"
 					/>
 				</view>
@@ -80,7 +80,12 @@ export default {
 					water: 40 // 最近一次浇水的量
 				}
 			],
-			isdarwer: false
+			isdarwer: false,
+			colorList: {
+				drought: '#B22222', // 缺水
+				normal: '#32CD32', // 正常
+				moist: '#4169E1' // 水浇多了
+			}
 		};
 	},
 	onLoad() {},
@@ -92,26 +97,27 @@ export default {
 			this.isdarwer = !this.isdarwer;
 		},
 		submit(index, flower) {
-			uni.request({
-				url: 'https://api.heclouds.com/devices/' + flower.ID + '/datapoints',
-				method: 'GET',
-				header: {
-					'api-key': flower.apikey
-				},
-				data: {
-					limit: 10,
-					parameter: flower.parameter
-				},
-				success: res => {
-					console.log(res);
-				},
-				fail: err => {
-					console.log(err);
-				},
-				complete: () => {}
-			});
+			this.startGet(index, flower);
+			// uni.request({
+			// 	url: 'https://api.heclouds.com/devices/' + flower.ID + '/datapoints',
+			// 	method: 'GET',
+			// 	header: {
+			// 		'api-key': flower.apikey
+			// 	},
+			// 	data: {
+			// 		limit: 1,
+			// 		parameter: flower.parameter
+			// 	},
+			// 	success: res => {
+			// 		console.log(res);
+			// 	},
+			// 	fail: err => {
+			// 		console.log(err);
+			// 	},
+			// 	complete: () => {}
+			// });
 		},
-		startGet() {
+		startGet(index, flower) {
 			// 第一次获取
 			uni.request({
 				url: 'https://api.heclouds.com/devices/' + flower.ID + '/datapoints',
@@ -120,21 +126,32 @@ export default {
 					'api-key': flower.apikey
 				},
 				data: {
-					limit: 10,
-					parameter: flower.parameter
+					limit: 2,
+					parameter: flower.parameter,
+					start: '2020-03-01T00:00:00'
 				},
 				success: res => {
 					console.log(res);
-				},
-				fail: err => {
-					console.log(err);
-				},
-				complete: () => {}
+					if (res.errno == 0) {
+						// 请求成功
+						let floweritem = flower
+						// {
+						// 	name: '白百何',
+						// 	apikey: 'N4Hi4scsutQWHiUhVf=y10S6zj4=',
+						// 	ID: 577429787,
+						// 	init: 60, // 初始重量
+						// 	newvalue: 99, // 实时重量
+						// 	water: 40 // 最近一次浇水的量
+						// };
+						floweritem.init=res.data.datastreams[0].datapoints[0].value
+						floweritem.newvalue=res.data.datastreams[0].datapoints[1].value
+					}
+				}
 			});
 		},
 		deleteFlower(flower) {
 			uni.request({
-				url: 'http://api.heclouds.com/devices/'+flower.ID+'/datastreams/temperature',
+				url: 'http://api.heclouds.com/devices/' + flower.ID + '/datastreams/' + flower.parameter,
 				method: 'DELETE',
 				header: {
 					'api-key': flower.apikey
