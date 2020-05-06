@@ -50,7 +50,7 @@
 					<input class="input" password placeholder="请输入api-key" :value="newfloter.apikey" bindinput="passWdInput" />
 				</view>
 				<view class="btnfloor">
-					<view class="btnflooritem" @click="submit('1',newfloter)">添加</view>
+					<view class="btnflooritem" @click="submit('1', newfloter)">添加</view>
 					<view class="btnflooritem" @click.stop="darwer()">取消</view>
 				</view>
 			</view>
@@ -91,22 +91,59 @@ export default {
 		darwer() {
 			this.isdarwer = !this.isdarwer;
 		},
-		submit(index,flower){
+		submit(index, flower) {
 			uni.request({
-				url: "https://api.heclouds.com/devices/" + flower.ID + "/datapoints",
+				url: 'https://api.heclouds.com/devices/' + flower.ID + '/datapoints',
 				method: 'GET',
-				header:{
-					'api-key':flower.apikey
+				header: {
+					'api-key': flower.apikey
 				},
 				data: {
-					limit:10,
-					parameter:flower.parameter
+					limit: 10,
+					parameter: flower.parameter
 				},
 				success: res => {
-					console.log(res)
+					console.log(res);
 				},
-				fail: (err) => {
-					console.log(err)
+				fail: err => {
+					console.log(err);
+				},
+				complete: () => {}
+			});
+		},
+		startGet() {
+			// 第一次获取
+			uni.request({
+				url: 'https://api.heclouds.com/devices/' + flower.ID + '/datapoints',
+				method: 'GET',
+				header: {
+					'api-key': flower.apikey
+				},
+				data: {
+					limit: 10,
+					parameter: flower.parameter
+				},
+				success: res => {
+					console.log(res);
+				},
+				fail: err => {
+					console.log(err);
+				},
+				complete: () => {}
+			});
+		},
+		deleteFlower(flower) {
+			uni.request({
+				url: 'http://api.heclouds.com/devices/'+flower.ID+'/datastreams/temperature',
+				method: 'DELETE',
+				header: {
+					'api-key': flower.apikey
+				},
+				success: res => {
+					console.log(res);
+				},
+				fail: err => {
+					console.log(err);
 				},
 				complete: () => {}
 			});
