@@ -10,21 +10,7 @@
 /* 8 */,
 /* 9 */,
 /* 10 */,
-/* 11 */
-/*!********************************************************************!*\
-  !*** D:/ITStudy/小程序/智能花托/main.js?{"page":"pages%2Findex%2Findex"} ***!
-  \********************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(createPage) {__webpack_require__(/*! uni-pages */ 4);
-var _vue = _interopRequireDefault(__webpack_require__(/*! vue */ 2));
-var _index = _interopRequireDefault(__webpack_require__(/*! ./pages/index/index.vue */ 12));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
-createPage(_index.default);
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["createPage"]))
-
-/***/ }),
+/* 11 */,
 /* 12 */
 /*!*************************************************!*\
   !*** D:/ITStudy/小程序/智能花托/pages/index/index.vue ***!
@@ -195,6 +181,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 var _default =
 {
   data: function data() {
@@ -204,20 +199,28 @@ var _default =
         name: '白百何',
         apikey: 'N4Hi4scsutQWHiUhVf=y10S6zj4=',
         ID: 577429787,
-        parameter: 'Weight_Shiwu' },
+        parameter: 'Weight_Shiwu',
+        inter: '',
+        color: '#32CD32',
+        percent: 0 },
 
       flowerList: [
-      //花托列表
-      {
-        name: '白百何',
-        apikey: 'N4Hi4scsutQWHiUhVf=y10S6zj4=',
-        ID: 577429787,
-        init: 60, // 初始重量
-        newvalue: 99, // 实时重量
-        water: 40 // 最近一次浇水的量
-      }],
-
-      isdarwer: false };
+        //花托列表
+        // {
+        // 	name: '白百何',
+        // 	apikey: 'N4Hi4scsutQWHiUhVf=y10S6zj4=',
+        // 	ID: 577429787,
+        // 	init: 60, // 初始重量
+        // 	newvalue: 99, // 实时重量
+        // 	water: 40 // 最近一次浇水的量
+        // }
+      ],
+      isdarwer: false,
+      colorList: {
+        drought: '#B22222', // 缺水
+        normal: '#32CD32', // 正常
+        moist: '#4169E1' // 水浇多了
+      } };
 
   },
   onLoad: function onLoad() {},
@@ -229,23 +232,155 @@ var _default =
       this.isdarwer = !this.isdarwer;
     },
     submit: function submit(index, flower) {
+      this.startGet(index, flower);
+
+      this.darwer();
+    },
+    Jpercent: function Jpercent(item) {
+      if (item.newvalue > item.init) {
+        var num = [(item.newvalue - item.init) / item.water] * 100;
+        // console.log(num);
+        return num.toFixed(2); //百分比保留两位小数
+      } else {
+        return 0;
+      }
+    },
+    startGet: function startGet(index, flower) {var _this = this;
+      // 第一次获取
+      var that = this;
       uni.request({
-        url: "https://api.heclouds.com/devices/" + flower.ID + "/datapoints",
+        url: 'https://api.heclouds.com/devices/' + flower.ID + '/datapoints',
         method: 'GET',
         header: {
           'api-key': flower.apikey },
 
         data: {
-          limit: 10,
-          parameter: flower.parameter },
+          limit: 2,
+          datastream_id: flower.parameter,
+          start: '2020-04-07T11:01:00' },
+
+        success: function success(res) {
+          // console.log(res);
+          if (res.data.errno == 0) {
+            // 请求成功
+            // let floweritem = flower
+            var deepClone = function deepClone(obj) {
+              var _tmp = JSON.stringify(obj); //将对象转换为json字符串形式
+              var result = JSON.parse(_tmp); //将转换而来的字符串转换为原生js对象
+              return result;
+            };
+            var floweritem = deepClone(flower); // 深拷贝  取消关联
+            // {
+            // 	name: '白百何',
+            // 	apikey: 'N4Hi4scsutQWHiUhVf=y10S6zj4=',
+            // 	ID: 577429787,
+            // 	init: 60, // 初始重量
+            // 	newvalue: 99, // 实时重量
+            // 	water: 40 // 最近一次浇水的量
+            // };
+            floweritem.init = res.data.data.datastreams[0].datapoints[0].value;
+            floweritem.newvalue = res.data.data.datastreams[0].datapoints[1].value;
+            if (floweritem.newvalue > floweritem.init) {
+              //说明浇水了
+              floweritem.water = floweritem.newvalue - floweritem.init;
+            } else {
+              floweritem.water = 0;
+            }
+            // this.flowerList[index]=floweritem
+            floweritem.percent = _this.Jpercent(floweritem);
+            if (floweritem.percent > 60) {
+              // 水浇多了
+              floweritem.color = _this.colorList.moist;
+            } else if (floweritem.percent < 30) {
+              //缺水
+              floweritem.color = _this.colorList.drought;
+            } else {
+              floweritem.color = _this.colorList.normal;
+            }
+            _this.flowerList.push(floweritem);
+            that.flowerList[index].inter = setInterval(function () {
+              that.getflowerKg(index, floweritem);
+            }, 5000); // 每隔5秒请求一次数据
+          }
+        } });
+
+    },
+    getflowerKg: function getflowerKg(index, flower) {var _this2 = this;
+      // 更新数据
+      // console.log(index, flower);
+      uni.request({
+        url: 'https://api.heclouds.com/devices/' + flower.ID + '/datapoints',
+        method: 'GET',
+        header: {
+          'api-key': flower.apikey },
+
+        data: {
+          limit: 2,
+          datastream_id: flower.parameter },
+
+        success: function success(res) {
+          // console.log(res);
+          var floweritem = flower;
+          // let deepClone = function(obj) {
+          // 	let _tmp = JSON.stringify(obj); //将对象转换为json字符串形式
+          // 	let result = JSON.parse(_tmp); //将转换而来的字符串转换为原生js对象
+          // 	return result;
+          // };
+          // let floweritem = deepClone(flower); // 深拷贝  取消关联
+          if (res.data.errno == 0) {
+            var newf = res.data.data.datastreams[0].datapoints[0].value;
+            if (newf > floweritem.newvalue) {
+              //说明浇水了
+              floweritem.water = newf - floweritem.newvalue; // 浇水的量
+              floweritem.init = floweritem.init + floweritem.water * 0.01; // 因浇水花初始重量长了浇水量的1%
+              floweritem.newvalue = newf; // 计算结束再赋值
+            } else {
+              floweritem.newvalue = newf;
+            }
+            floweritem.percent = _this2.Jpercent(floweritem);
+            if (floweritem.percent > 60) {
+              // 水浇多了
+              floweritem.color = _this2.colorList.moist;
+            } else if (floweritem.percent < 30) {
+              //缺水
+              floweritem.color = _this2.colorList.drought;
+            } else {
+              floweritem.color = _this2.colorList.normal;
+            }
+            var itindex = _this2.foundI(floweritem.inter);
+            _this2.flowerList[itindex] = floweritem;
+            // this.flowerList.push(floweritem)
+            _this2.$forceUpdate(); //由于数组深层改变无法触发相应，需要强制重新渲染
+            // console.log(this.flowerList);
+          }
+        } });
+
+    },
+    foundI: function foundI(inter) {
+      // 查找当前花的下标
+      for (var i = 0; i < this.flowerList.length; i++) {
+        if (this.flowerList[i].inter == inter) return i;
+      }
+      return -1;
+    },
+    deleteFlower: function deleteFlower(index, flower) {var _this3 = this;
+      uni.request({
+        url: 'http://api.heclouds.com/devices/' + flower.ID + '/datastreams/' + flower.parameter,
+        method: 'DELETE',
+        header: {
+          'api-key': flower.apikey },
 
         success: function success(res) {
           console.log(res);
-        },
-        fail: function fail(err) {
-          console.log(err);
-        },
-        complete: function complete() {} });
+          // if (res.data.errno == 0) { // ？？？？？删除流一直不成功  没找到原因？？？？？？？？
+          // 删除流成功
+          // console.log(flower.inter);
+          var itindex = _this3.foundI(flower.inter);
+          clearInterval(flower.inter); // 删除定时器
+          // console.log(itindex);
+          _this3.flowerList.splice(itindex, 1);
+          // }
+        } });
 
     } } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
@@ -277,6 +412,21 @@ __webpack_require__.r(__webpack_exports__);
     if(false) { var cssReload; }
   
 
+/***/ }),
+/* 19 */
+/*!********************************************************************!*\
+  !*** D:/ITStudy/小程序/智能花托/main.js?{"page":"pages%2Findex%2Findex"} ***!
+  \********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(createPage) {__webpack_require__(/*! uni-pages */ 4);
+var _vue = _interopRequireDefault(__webpack_require__(/*! vue */ 2));
+var _index = _interopRequireDefault(__webpack_require__(/*! ./pages/index/index.vue */ 12));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
+createPage(_index.default);
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["createPage"]))
+
 /***/ })
-],[[11,"common/runtime","common/vendor"]]]);
+],[[19,"common/runtime","common/vendor"]]]);
 //# sourceMappingURL=../../../.sourcemap/mp-weixin/pages/index/index.js.map

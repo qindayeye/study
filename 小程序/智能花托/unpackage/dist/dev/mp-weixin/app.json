@@ -6,9 +6,8 @@
   "window": {
     "navigationBarTextStyle": "black",
     "navigationBarTitleText": "Intelligent receptacle",
-    "navigationBarBackgroundColor": "#F8F8F8",
-    "backgroundColor": "#F8F8F8"
+    "navigationBarBackgroundColor": "#FFFFFF",
+    "backgroundColor": "#FFFFFF"
   },
-  "usingComponents": {},
-  "sitemapLocation": "sitemap.json"
+  "usingComponents": {}
 }

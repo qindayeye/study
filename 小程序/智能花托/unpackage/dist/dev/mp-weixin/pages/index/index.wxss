@@ -24,6 +24,12 @@
 /* 垂直间距 */
 /* 透明度 */
 /* 文章场景相关 */
+.content .kong.data-v-4ac77540 {
+  margin-top: 100rpx;
+  text-align: center;
+  font-size: 40rpx;
+  color: #808080;
+}
 .content .title.data-v-4ac77540 {
   height: 88rpx;
   width: 100%;
@@ -132,12 +138,12 @@
   position: absolute;
   bottom: 0;
   left: 0;
-  height: 450rpx;
+  height: 500rpx;
   width: 100%;
   background-color: #ffffff;
 }
 .content .addmask .addform .itemView.data-v-4ac77540 {
-  padding-left: 10rpx;
+  padding-left: 20rpx;
   height: 88rpx;
   width: 100%;
   display: -webkit-box;
@@ -150,8 +156,21 @@
   -webkit-align-items: center;
           align-items: center;
 }
+.content .addmask .addform .itemView .label.data-v-4ac77540 {
+  margin-top: 22px;
+  width: 15%;
+  font-size: 30rpx;
+  text-align: justify;
+}
+.content .addmask .addform .itemView .label text.data-v-4ac77540 {
+  display: inline-block;
+  width: 100%;
+}
 .content .addmask .addform .itemView .input.data-v-4ac77540 {
-  width: 75%;
+  margin-left: 20rpx;
+  padding-left: 15rpx;
+  width: 70%;
+  border-bottom: 1rpx solid #e6e6e6;
 }
 .content .addmask .addform .btnfloor.data-v-4ac77540 {
   height: 88rpx;

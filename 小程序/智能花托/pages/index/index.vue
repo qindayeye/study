@@ -3,6 +3,7 @@
 		<!-- 标题 -->
 		<view class="title">智能花托</view>
 		<!-- 花托列表 -->
+		<view class="kong" v-if="flowerList.length == 0">尚未添加花托</view>
 		<view class="flower" v-for="(item, index) in flowerList" :key="index">
 			<view class="ONumber">{{ index + 1 }}</view>
 			<view class="dsc">
@@ -14,44 +15,52 @@
 						g
 					</view>
 				</view>
-				<view class="dscBottom">
-					<progress
-						class="prog"
-						show-info="true"
-						border-radius="8"
-						backgroundColor="#DCDCDC"
-						:percent="[(item.newvalue - item.init) / item.water] * 100"
-						activeColor="#32CD32"
-						stroke-width="16"
-					/>
+				<view class="dscBottom" :style="'color:' + item.color">
+					<progress class="prog" show-info="true" border-radius="8" backgroundColor="#DCDCDC" :percent="item.percent" :activeColor="item.color" stroke-width="16" />
 				</view>
 			</view>
-			<view class="delete"><image src="../../static/det.png" mode=""></image></view>
+			<view class="delete" @click="deleteFlower(index, item)"><image src="../../static/det.png" mode=""></image></view>
 		</view>
 		<!-- 添加按钮 -->
 		<image @click="darwer()" class="addbtn" src="../../static/jrsj.png" mode=""></image>
 		<!-- 添加表单 -->
 		<view class="addmask" @click.stop="darwer()" v-if="isdarwer">
 			<view class="addform" @click.stop="ss()">
-				<view class="itemView">
-					名称：
-					<input class="input" name="userName" placeholder="请输入设备名称" :value="newfloter.name" />
+				<view class="itemView" style="margin-top: 40rpx;">
+					<view class="label">
+						名称
+						<text></text>
+					</view>
+					:
+					<input class="input" name="userName" placeholder="请输入设备名称" v-model="newfloter.name" />
 				</view>
 				<view class="itemView">
-					参数：
-					<input class="input" name="userName" placeholder="请输入设备参数" :value="newfloter.parameter" />
+					<view class="label">
+						参数
+						<text></text>
+					</view>
+					:
+					<input class="input" name="userName" placeholder="请输入设备参数" v-model="newfloter.parameter" />
 				</view>
 				<view class="itemView">
-					设备ID：
-					<input class="input" name="userName" placeholder="请输入设备ID" :value="newfloter.ID" />
+					<view class="label">
+						设备ID
+						<text></text>
+					</view>
+					:
+					<input class="input" name="userName" placeholder="请输入设备ID" v-model="newfloter.ID" />
 				</view>
 				<view class="itemView">
-					api-key：
-					<input class="input" password placeholder="请输入api-key" :value="newfloter.apikey" bindinput="passWdInput" />
+					<view class="label">
+						api-key
+						<text></text>
+					</view>
+					:
+					<input class="input" password placeholder="请输入api-key" v-model="newfloter.apikey" bindinput="passWdInput" />
 				</view>
 				<view class="btnfloor">
-					<view class="btnflooritem" @click="submit('1', newfloter)">添加</view>
-					<view class="btnflooritem" @click.stop="darwer()">取消</view>
+					<view class="btnflooritem" style="color: #F08080;" @click="submit(flowerList.length, newfloter)">添加</view>
+					<view class="btnflooritem" style="color: #808080;" @click.stop="darwer()">取消</view>
 				</view>
 			</view>
 		</view>
@@ -67,18 +76,21 @@ export default {
 				name: '白百何',
 				apikey: 'N4Hi4scsutQWHiUhVf=y10S6zj4=',
 				ID: 577429787,
-				parameter: 'Weight_Shiwu'
+				parameter: 'Weight_Shiwu',
+				inter: '',
+				color: '#32CD32',
+				percent: 0
 			},
 			flowerList: [
 				//花托列表
-				{
-					name: '白百何',
-					apikey: 'N4Hi4scsutQWHiUhVf=y10S6zj4=',
-					ID: 577429787,
-					init: 60, // 初始重量
-					newvalue: 99, // 实时重量
-					water: 40 // 最近一次浇水的量
-				}
+				// {
+				// 	name: '白百何',
+				// 	apikey: 'N4Hi4scsutQWHiUhVf=y10S6zj4=',
+				// 	ID: 577429787,
+				// 	init: 60, // 初始重量
+				// 	newvalue: 99, // 实时重量
+				// 	water: 40 // 最近一次浇水的量
+				// }
 			],
 			isdarwer: false,
 			colorList: {
@@ -98,27 +110,21 @@ export default {
 		},
 		submit(index, flower) {
 			this.startGet(index, flower);
-			// uni.request({
-			// 	url: 'https://api.heclouds.com/devices/' + flower.ID + '/datapoints',
-			// 	method: 'GET',
-			// 	header: {
-			// 		'api-key': flower.apikey
-			// 	},
-			// 	data: {
-			// 		limit: 1,
-			// 		parameter: flower.parameter
-			// 	},
-			// 	success: res => {
-			// 		console.log(res);
-			// 	},
-			// 	fail: err => {
-			// 		console.log(err);
-			// 	},
-			// 	complete: () => {}
-			// });
+
+			this.darwer();
+		},
+		Jpercent(item) {
+			if (item.newvalue > item.init) {
+				let num = [(item.newvalue - item.init) / item.water] * 100;
+				// console.log(num);
+				return num.toFixed(2); //百分比保留两位小数
+			} else {
+				return 0;
+			}
 		},
 		startGet(index, flower) {
 			// 第一次获取
+			let that = this;
 			uni.request({
 				url: 'https://api.heclouds.com/devices/' + flower.ID + '/datapoints',
 				method: 'GET',
@@ -127,14 +133,20 @@ export default {
 				},
 				data: {
 					limit: 2,
-					parameter: flower.parameter,
-					start: '2020-03-01T00:00:00'
+					datastream_id: flower.parameter,
+					start: '2020-04-07T11:01:00'
 				},
 				success: res => {
-					console.log(res);
-					if (res.errno == 0) {
+					// console.log(res);
+					if (res.data.errno == 0) {
 						// 请求成功
-						let floweritem = flower
+						// let floweritem = flower
+						let deepClone = function(obj) {
+							let _tmp = JSON.stringify(obj); //将对象转换为json字符串形式
+							let result = JSON.parse(_tmp); //将转换而来的字符串转换为原生js对象
+							return result;
+						};
+						let floweritem = deepClone(flower); // 深拷贝  取消关联
 						// {
 						// 	name: '白百何',
 						// 	apikey: 'N4Hi4scsutQWHiUhVf=y10S6zj4=',
@@ -143,13 +155,92 @@ export default {
 						// 	newvalue: 99, // 实时重量
 						// 	water: 40 // 最近一次浇水的量
 						// };
-						floweritem.init=res.data.datastreams[0].datapoints[0].value
-						floweritem.newvalue=res.data.datastreams[0].datapoints[1].value
+						floweritem.init = res.data.data.datastreams[0].datapoints[0].value;
+						floweritem.newvalue = res.data.data.datastreams[0].datapoints[1].value;
+						if (floweritem.newvalue > floweritem.init) {
+							//说明浇水了
+							floweritem.water = floweritem.newvalue - floweritem.init;
+						} else {
+							floweritem.water = 0;
+						}
+						// this.flowerList[index]=floweritem
+						floweritem.percent = this.Jpercent(floweritem);
+						if (floweritem.percent > 60) {
+							// 水浇多了
+							floweritem.color = this.colorList.moist;
+						} else if (floweritem.percent < 30) {
+							//缺水
+							floweritem.color = this.colorList.drought;
+						} else {
+							floweritem.color = this.colorList.normal;
+						}
+						this.flowerList.push(floweritem);
+						that.flowerList[index].inter = setInterval(() => {
+							that.getflowerKg(index, floweritem);
+						}, 5000); // 每隔5秒请求一次数据
 					}
 				}
 			});
 		},
-		deleteFlower(flower) {
+		getflowerKg(index, flower) {
+			// 更新数据
+			// console.log(index, flower);
+			uni.request({
+				url: 'https://api.heclouds.com/devices/' + flower.ID + '/datapoints',
+				method: 'GET',
+				header: {
+					'api-key': flower.apikey
+				},
+				data: {
+					limit: 2,
+					datastream_id: flower.parameter
+				},
+				success: res => {
+					// console.log(res);
+					let floweritem = flower;
+					// let deepClone = function(obj) {
+					// 	let _tmp = JSON.stringify(obj); //将对象转换为json字符串形式
+					// 	let result = JSON.parse(_tmp); //将转换而来的字符串转换为原生js对象
+					// 	return result;
+					// };
+					// let floweritem = deepClone(flower); // 深拷贝  取消关联
+					if (res.data.errno == 0) {
+						let newf = res.data.data.datastreams[0].datapoints[0].value;
+						if (newf > floweritem.newvalue) {
+							//说明浇水了
+							floweritem.water = newf - floweritem.newvalue; // 浇水的量
+							floweritem.init = floweritem.init + floweritem.water * 0.01; // 因浇水花初始重量长了浇水量的1%
+							floweritem.newvalue = newf; // 计算结束再赋值
+						} else {
+							floweritem.newvalue = newf;
+						}
+						floweritem.percent = this.Jpercent(floweritem);
+						if (floweritem.percent > 60) {
+							// 水浇多了
+							floweritem.color = this.colorList.moist;
+						} else if (floweritem.percent < 30) {
+							//缺水
+							floweritem.color = this.colorList.drought;
+						} else {
+							floweritem.color = this.colorList.normal;
+						}
+						let itindex = this.foundI(floweritem.inter);
+						this.flowerList[itindex] = floweritem;
+						// this.flowerList.push(floweritem)
+						this.$forceUpdate(); //由于数组深层改变无法触发相应，需要强制重新渲染
+						// console.log(this.flowerList);
+					}
+				}
+			});
+		},
+		foundI(inter) {
+			// 查找当前花的下标
+			for (var i = 0; i < this.flowerList.length; i++) {
+				if (this.flowerList[i].inter == inter) return i;
+			}
+			return -1;
+		},
+		deleteFlower(index, flower) {
 			uni.request({
 				url: 'http://api.heclouds.com/devices/' + flower.ID + '/datastreams/' + flower.parameter,
 				method: 'DELETE',
@@ -158,11 +249,15 @@ export default {
 				},
 				success: res => {
 					console.log(res);
-				},
-				fail: err => {
-					console.log(err);
-				},
-				complete: () => {}
+					// if (res.data.errno == 0) { // ？？？？？删除流一直不成功  没找到原因？？？？？？？？
+					// 删除流成功
+					// console.log(flower.inter);
+					let itindex = this.foundI(flower.inter);
+					clearInterval(flower.inter); // 删除定时器
+					// console.log(itindex);
+					this.flowerList.splice(itindex, 1);
+					// }
+				}
 			});
 		}
 	}
@@ -171,6 +266,12 @@ export default {
 
 <style lang="scss" scoped>
 .content {
+	.kong {
+		margin-top: 100rpx;
+		text-align: center;
+		font-size: 40rpx;
+		color: #808080;
+	}
 	.title {
 		height: 88rpx;
 		width: 100%;
@@ -261,20 +362,32 @@ export default {
 			position: absolute;
 			bottom: 0;
 			left: 0;
-			height: 450rpx;
+			height: 500rpx;
 			width: 100%;
 			background-color: #ffffff;
 
 			.itemView {
-				padding-left: 10rpx;
+				padding-left: 20rpx;
 				height: 88rpx;
 				width: 100%;
 				display: flex;
 				justify-content: flex-start;
 				align-items: center;
-
+				.label {
+					margin-top: 22px;
+					width: 15%;
+					font-size: 30rpx;
+					text-align: justify;
+					text {
+						display: inline-block;
+						width: 100%;
+					}
+				}
 				.input {
-					width: 75%;
+					margin-left: 20rpx;
+					padding-left: 15rpx;
+					width: 70%;
+					border-bottom: 1rpx solid #e6e6e6;
 				}
 			}
 			.btnfloor {
