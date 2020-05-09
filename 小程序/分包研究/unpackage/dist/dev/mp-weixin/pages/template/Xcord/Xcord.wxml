@@ -1,0 +1,1 @@
+<view class="data-v-d7be2894"><view class="qrimg-i data-v-d7be2894"><tki-qrcode vue-id="43ea72a5-1" cid="qrcode1" val="{{val}}" size="{{size}}" unit="{{unit}}" icon="{{icon}}" iconSize="{{iconsize}}" lv="{{lv}}" onval="{{onval}}" loadMake="{{loadMake}}" usingComponents="{{true}}" data-ref="qrcode" class="data-v-d7be2894 vue-ref" bind:__l="__l"></tki-qrcode></view></view>

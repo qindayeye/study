@@ -1,0 +1,1 @@
+<view class="data-v-3eca1be8"><view data-event-opts="{{[['tap',[['goto']]]]}}" class="btn data-v-3eca1be8" bindtap="__e">二维码生成</view></view>

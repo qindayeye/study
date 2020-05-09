@@ -1,0 +1,11 @@
+.btn.data-v-3eca1be8 {
+  margin: 10rpx auto;
+  height: 66rpx;
+  width: 400rpx;
+  border: #007aff solid 1rpx;
+  border-radius: 33rpx;
+  font-size: 33rpx;
+  text-align: center;
+  line-height: 66rpx;
+}
+

@@ -1,0 +1,54 @@
+{
+  "pages": [
+    "pages/tabBar/index/index",
+    "pages/tabBar/subpackage/subpackage",
+    "pages/tabBar/template/template",
+    "pages/tabBar/module/module"
+  ],
+  "subPackages": [
+    {
+      "root": "pages/template",
+      "pages": [
+        "Xcord/Xcord"
+      ]
+    }
+  ],
+  "window": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "从无到有大工程",
+    "navigationBarBackgroundColor": "#F8F8F8",
+    "backgroundColor": "#F8F8F8"
+  },
+  "tabBar": {
+    "color": "#555555",
+    "selectedColor": "#007AFF",
+    "backgroundColor": "#FFFFFF",
+    "list": [
+      {
+        "pagePath": "pages/tabBar/index/index",
+        "iconPath": "static/tarBar/home.png",
+        "selectedIconPath": "static/tarBar/homeActive.png",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/tabBar/subpackage/subpackage",
+        "iconPath": "static/tarBar/menu.png",
+        "selectedIconPath": "static/tarBar/menuActive.png",
+        "text": "分包"
+      },
+      {
+        "pagePath": "pages/tabBar/template/template",
+        "iconPath": "static/tarBar/connect.png",
+        "selectedIconPath": "static/tarBar/connectdevice.png",
+        "text": "模板"
+      },
+      {
+        "pagePath": "pages/tabBar/module/module",
+        "iconPath": "static/tarBar/master.png",
+        "selectedIconPath": "static/tarBar/masterctrl.png",
+        "text": "组件"
+      }
+    ]
+  },
+  "usingComponents": {}
+}

@@ -1,0 +1,68 @@
+{
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/tabBar/index/index",
+			"style": {
+				"navigationBarTitleText": "首页"
+			}
+		}, {
+			"path": "pages/tabBar/subpackage/subpackage",
+			"style": {
+				"navigationBarTitleText": "分包"
+			}
+		}, {
+			"path": "pages/tabBar/template/template",
+			"style": {
+				"navigationBarTitleText": "模板"
+			}
+		}, {
+			"path": "pages/tabBar/module/module",
+			"style": {
+				"navigationBarTitleText": "组件"
+			}
+		}
+
+
+	],
+	"subPackages": [{
+		"root": "pages/template",
+		"pages": [{
+			"path": "Xcord/Xcord",
+			"style": {
+				"navigationBarTitleText": "二维码生成"
+			}
+		}]
+	}],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "从无到有大工程",
+		"navigationBarBackgroundColor": "#F8F8F8",
+		"backgroundColor": "#F8F8F8"
+	},
+	"tabBar": {
+		"color": "#555555",
+		"selectedColor": "#007AFF",
+		"backgroundColor": "#FFFFFF",
+		"list": [{
+			"pagePath": "pages/tabBar/index/index",
+			"iconPath": "static/tarBar/home.png",
+			"selectedIconPath": "static/tarBar/homeActive.png",
+			"text": "首页"
+		}, {
+			"pagePath": "pages/tabBar/subpackage/subpackage",
+			"iconPath": "static/tarBar/menu.png",
+			"selectedIconPath": "static/tarBar/menuActive.png",
+			"text": "分包"
+		}, {
+			"pagePath": "pages/tabBar/template/template",
+			"iconPath": "static/tarBar/connect.png",
+			"selectedIconPath": "static/tarBar/connectdevice.png",
+			"text": "模板"
+		}, {
+			"pagePath": "pages/tabBar/module/module",
+			"iconPath": "static/tarBar/master.png",
+			"selectedIconPath": "static/tarBar/masterctrl.png",
+			"text": "组件"
+		}]
+	}
+}
