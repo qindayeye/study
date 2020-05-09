@@ -21,15 +21,40 @@
 				"navigationBarTitleText": "组件"
 			}
 		}
-
-
 	],
 	"subPackages": [{
 		"root": "pages/template",
 		"pages": [{
 			"path": "Xcord/Xcord",
 			"style": {
-				"navigationBarTitleText": "二维码生成"
+				"navigationBarTitleText": "二维码生成",
+				"app-plus": {
+					"scrollIndicator": "none",
+					"titleNView": {
+						"buttons": [{
+								"float": "left",
+								"color": "#999999",
+								"colorPressed": "#BBBBBB",
+								"fontSrc": "/static/font/iconfont.ttf",
+								"text": "\ue699",
+								"fontSize": "25px"
+							},
+							{
+								"float": "right",
+								"color": "#FF0000",
+								"colorPressed": "#000000",
+								"fontSrc": "/static/font/iconfont.ttf",
+								"text": "\ue69e",
+								"fontSize": "25px"
+							}
+						]
+					}
+				}
+			}
+		}, {
+			"path": "video/video",
+			"style": {
+				"navigationBarTitleText": "视频播放器"
 			}
 		}]
 	}],
